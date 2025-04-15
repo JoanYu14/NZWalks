@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using NZ_Walk2.Repositories;
 using Microsoft.Extensions.FileProviders;
+using Serilog;
+using NZ_Walk2.Middlewares;
 namespace NZ_Walk.Server
 {
     public class Program
@@ -21,6 +23,29 @@ namespace NZ_Walk.Server
         {
             // 建立 Web 應用程式的建構器，會自動載入 appsettings.json、環境變數、命令列參數等
             var builder = WebApplication.CreateBuilder(args);
+
+            var logger = new LoggerConfiguration()
+                // 建立一個新的 LoggerConfiguration 實例，這是使用 Serilog 的起點
+                // Serilog 使用「流式 API」來設定 Logger，例如指定輸出目的地、日誌等級、格式等
+                .WriteTo.Console()
+                // 將日誌輸出到「主控台」(Console)
+                // 在開發或測試環境時，這很實用，可以即時看到執行狀況或錯誤訊息
+                .WriteTo.File("Logs/NzWalks_Log.log", rollingInterval: RollingInterval.Minute)
+                // 將日誌輸出到檔案中，檔名為 Logs/NzWalks_Log.txt
+                // 設定 rollingInterval: RollingInterval.Day 代表「每日」會產生一個新的日誌檔案
+                // 例如：NzWalks_Log_20250411.txt、NzWalks_Log_20250412.txt ...
+                // 如果 Logs 資料夾不存在，Serilog 會自動建立
+                .MinimumLevel.Information()
+                // 設定 Logger 的最小記錄等級為 Information
+                // 表示只有等級為 Information、Warning、Error、Fatal 的日誌會被記錄
+                // 等級低於 Information 的 Verbose 和 Debug 不會被記錄
+                // 日誌等級從低到高依序為：
+                // Verbose < Debug < Information < Warning < Error < Fatal
+                .CreateLogger();
+            // 呼叫 CreateLogger() 方法實際建立一個 Logger 實例
+            // 回傳的 logger 是實作了 Serilog 的 ILogger 介面
+            // 可以使用這個 logger 來呼叫 .Information(), .Error(), .Warning() 等方法來記錄日誌
+
 
             // 註冊服務到 DI 容器（Dependency Injection）
 
@@ -203,7 +228,8 @@ namespace NZ_Walk.Server
                 app.UseSwaggerUI();     // 顯示 Swagger UI 頁面
             }
 
-
+            // 將自訂的中介軟體 ExceptionHandlerMiddleware 加入到 ASP.NET Core 的請求處理管線（Request Pipeline）中。
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
 
             app.UseHttpsRedirection();
             // 自動將 HTTP 請求轉為 HTTPS，提高安全性

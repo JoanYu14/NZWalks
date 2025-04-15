@@ -1,4 +1,5 @@
 ﻿// 匯入必要的命名空間
+using System.Text.Json;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -43,11 +44,17 @@ namespace NZ_Walk.Server.Controllers
         // 控制器會使用這個變數來執行物件映射操作，避免手動轉換資料
         private readonly IMapper _mapper;
 
+        // 私有變數 _logger 用來記錄日誌，ILogger 是 ASP.NET Core 內建的日誌介面
+        // 可用於除錯、紀錄系統事件或錯誤追蹤
+        private readonly ILogger<RegionsController> _logger;
+
+
         // 建構函式，這是控制器的初始化方法，會在控制器被創建時自動呼叫
         // 使用建構子注入的方式將 NzWalksDbContext 和 IRegionRepository 實例傳遞給控制器
         // 這使得控制器可以依賴這些外部服務（DbContext 和資料庫存取邏輯），並且可以在後續的方法中使用這些實例
 
-        public RegionsController(NzWalksDbContext dbContext, IRegionRepository regionRepository, IMapper mapper)
+
+        public RegionsController(NzWalksDbContext dbContext, IRegionRepository regionRepository, IMapper mapper, ILogger<RegionsController> logger)
         {
             // 將注入的 DbContext 實例儲存到私有變數 _dbContext 中
             _dbContext = dbContext;
@@ -59,6 +66,7 @@ namespace NZ_Walk.Server.Controllers
             // IMapper 是 AutoMapper 提供的物件映射工具，可以自動將不同類型的物件進行轉換
             // 例如，將 Domain Model 轉換為 DTO 物件，或將 DTO 物件轉換為 Domain Model，這樣可以避免手動編寫映射邏輯
             _mapper = mapper;
+            _logger = logger; // 儲存日誌記錄器實例
         }
 
         // 方法一：取得所有 Region 的資料
@@ -68,11 +76,16 @@ namespace NZ_Walk.Server.Controllers
         [Authorize(Roles ="Reader, Writer")]
         public async Task<IActionResult> GetAll()
         {
+            // 使用日誌紀錄 API 呼叫事件，方便未來追蹤與除錯
+            _logger.LogInformation("呼叫了 GetAllRegions 操作方法");
             // Step 1：使用 Entity Framework Core 的非同步方法，從資料庫中查詢所有 Regions 資料
             // _regionRepository.GetAllAsync() 是呼叫已注入的 IRegionRepository 介面的 GetAllAsync 方法
             // GetAllAsync 方法會從資料庫中查詢所有的 Region 資料，並以非同步的方式返回結果
             // 使用 await 來等待資料庫查詢完成，這樣可以讓程式在等待結果的過程中不會阻塞執行緒，提升效能
             var regionsDomain = await _regionRepository.GetAllAsync(); // 取得所有的 Region 資料，並儲存到 regionsDomain 變數中
+
+            // 再次使用日誌記錄取得的資料（已序列化成 JSON 格式），方便除錯與檢視
+            _logger.LogInformation($"GetAllRegions request結束，資料為:{JsonSerializer.Serialize(regionsDomain)}");
 
             // Step 2：使用 AutoMapper 進行物件轉換
             // _mapper.Map<List<RegionDto>>(regionsDomain) 將從資料庫中查詢到的 Region 物件集合 (regionsDomain) 
