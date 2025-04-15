@@ -1,0 +1,31 @@
+﻿@model IEnumerable<NZ_Walk.UI.Models.DTO.RegionDto>
+<!--  指定這個 Razor View 所綁定的資料模型是 RegionDto 的集合（例如 List<RegionDto>）
+    這樣才能在頁面中使用 Model 來存取傳進來的地區清單資料-->
+
+@{
+	// Razor 語法區塊，可以寫一些初始化的 C# 程式碼
+	// 此處為空白，表示目前沒有需要初始化的變數或邏輯
+}
+
+<h1 class="mt-3">Regions</h1>
+<!-- 頁面主標題，並加上 Bootstrap 的 margin-top 間距 class（mt-3）讓畫面更美觀 -->
+    <table class="table table-bordered table-striped mt-4">
+        <thead class="table-dark">
+		<tr>
+			<th>Id</th>
+			<th>Code</th>
+			<th>Name</th>
+		</tr>
+	</thead>
+    <tbody>
+        @foreach (var region in Model)  // 用 foreach 迴圈逐筆顯示地區資料
+        {
+            <tr>
+                <td>@region.Id</td>     
+                <td>@region.Code</td>  
+                <td>@region.Name</td>  
+            </tr>
+        }
+    </tbody>
+</table>
+<!-- 將地區清單渲染成 HTML 表格，每個 region 顯示在一列中 -->

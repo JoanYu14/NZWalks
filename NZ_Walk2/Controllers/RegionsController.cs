@@ -73,7 +73,7 @@ namespace NZ_Walk.Server.Controllers
         // HTTP 方法：GET
         // URL 範例：http://localhost:portNum/api/regions
         [HttpGet] // 標註此方法為 HTTP GET 請求，表示該方法會處理針對 /api/regions 的 GET 請求
-        [Authorize(Roles ="Reader, Writer")]
+        //[Authorize(Roles ="Reader, Writer")]
         public async Task<IActionResult> GetAll()
         {
             // 使用日誌紀錄 API 呼叫事件，方便未來追蹤與除錯

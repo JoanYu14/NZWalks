@@ -5,6 +5,8 @@ VisualStudioVersion = 17.13.35919.96
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NZ_Walk2", "NZ_Walk2\NZ_Walk2.csproj", "{9CB6627D-C663-4F28-825C-9694B55507C2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NZ_Walk.UI", "NZ_Walk.UI\NZ_Walk.UI.csproj", "{8C64B4AA-6118-4331-997E-CB50C3147EAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{9CB6627D-C663-4F28-825C-9694B55507C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CB6627D-C663-4F28-825C-9694B55507C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CB6627D-C663-4F28-825C-9694B55507C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C64B4AA-6118-4331-997E-CB50C3147EAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C64B4AA-6118-4331-997E-CB50C3147EAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C64B4AA-6118-4331-997E-CB50C3147EAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C64B4AA-6118-4331-997E-CB50C3147EAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
